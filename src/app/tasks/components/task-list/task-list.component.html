@@ -1,1 +1,20 @@
-<p>task-list works!</p>
+<div class="task-form">
+  <h2>Lista de Tarefas</h2>
+
+  <a routerLink="/tasks/new">Nova Tarefa</a>
+
+  <ul *ngIf="tasks.length > 0; else empty">
+    <li *ngFor="let task of tasks">
+      <app-task-item
+        [task]="task"
+        (delete)="deleteTask(task.id!)"
+        (complete)="markAsCompleted(task)"
+      >
+      </app-task-item>
+    </li>
+  </ul>
+
+  <ng-template #empty>
+    <p>Nenhuma tarefa cadastrada.</p>
+  </ng-template>
+</div>

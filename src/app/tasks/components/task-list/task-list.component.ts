@@ -1,13 +1,17 @@
-import { Task } from '../../models/task.model';
-import { TaskService } from './../../services/task.service';
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+
+import { Task } from '../../models/task.model';
+import { TaskService } from '../../services/task.service';
+import { TaskItemComponent } from '../task-item/task-item.component';
 
 @Component({
   selector: 'app-task-list',
   standalone: true,
-  imports: [],
+  imports: [CommonModule, RouterModule, TaskItemComponent],
   templateUrl: './task-list.component.html',
-  styleUrl: './task-list.component.scss',
+  styleUrls: ['./task-list.component.scss'],
 })
 export class TaskListComponent implements OnInit {
   tasks: Task[] = [];
@@ -24,7 +28,7 @@ export class TaskListComponent implements OnInit {
     });
   }
 
-  deleteTasks(id: number) {
+  deleteTask(id: number) {
     if (confirm('Você tem certeza que deseja excluir essa tarefa?')) {
       this.taskService.deleteTask(id).subscribe(() => {
         this.tasks = this.tasks.filter((t) => t.id !== id);
