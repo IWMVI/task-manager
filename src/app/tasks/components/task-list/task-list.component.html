@@ -7,8 +7,8 @@
     <li *ngFor="let task of tasks">
       <app-task-item
         [task]="task"
-        (delete)="deleteTask(task.id!)"
-        (complete)="markAsCompleted(task)"
+        (deleteTask)="deleteTask(task.id!)"
+        (completeTask)="toggleComplete(task)"
       >
       </app-task-item>
     </li>

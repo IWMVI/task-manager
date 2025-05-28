@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Task } from '../../models/task.model';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-task-item',
@@ -16,11 +16,17 @@ export class TaskItemComponent {
   @Output() completeTask = new EventEmitter<Task>();
   @Output() deleteTask = new EventEmitter<number>();
 
+  constructor(private router: Router) {}
+
   complete() {
     this.completeTask.emit(this.task);
   }
 
   delete() {
     this.deleteTask.emit(this.task.id!);
+  }
+
+  edit() {
+    this.router.navigate(['/tasks/edit', this.task.id]);
   }
 }

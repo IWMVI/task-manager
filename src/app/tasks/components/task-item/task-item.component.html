@@ -1,12 +1,15 @@
-<div [class.completed]="task.completado">
+<div class="task-item">
   <h3>{{ task.titulo }}</h3>
   <p>{{ task.descricao }}</p>
+  <p>
+    Data de conclusão:
+    {{ task.dataConclusao ? (task.dataConclusao | date: 'shortDate') : 'Sem data' }}
+  </p>
+  <p>Status: {{ task.completado ? 'Concluído' : 'Pendente' }}</p>
 
-  <button (click)="complete()" [disabled]="task.completado">
-    {{ task.completado ? 'Concluído' : 'Marcar como Concluído' }}
+  <button (click)="complete()">
+    {{ task.completado ? 'Desmarcar' : 'Concluir' }}
   </button>
-
+  <button (click)="edit()">Editar</button>
   <button (click)="delete()">Excluir</button>
-
-  <a [routerLink]="['/tasks/edit', task.id]">Editar</a>
 </div>

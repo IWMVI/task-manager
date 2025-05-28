@@ -26,10 +26,10 @@ export class TaskFormComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Inicializa o formulário
     this.form = this.fb.group({
       titulo: ['', Validators.required],
       descricao: [''],
+      dataConclusao: [''], // <- Campo adicionado
       completado: [false],
     });
 
@@ -40,6 +40,7 @@ export class TaskFormComponent implements OnInit {
         this.form.patchValue({
           titulo: task.titulo,
           descricao: task.descricao,
+          dataConclusao: task.dataConclusao ? task.dataConclusao.split('T')[0] : '',
           completado: task.completado,
         });
       });
@@ -49,23 +50,23 @@ export class TaskFormComponent implements OnInit {
   onSubmit() {
     if (this.form.invalid) return;
 
-    // Monta o objeto Task, tratando dataConclusao
+    const dataConclusaoRaw = this.form.value.dataConclusao;
+    const dataConclusaoISO = dataConclusaoRaw ? new Date(dataConclusaoRaw).toISOString() : null;
+
     const task: Task = {
-      titulo: this.form.value.titulo!,
+      titulo: this.form.value.titulo,
       descricao: this.form.value.descricao ?? '',
       completado: this.form.value.completado ?? false,
-      dataConclusao: this.form.value.completado ? new Date().toISOString() : null,
-      id: this.taskId, // Inclui id se for edição (backend pode ignorar ou usar)
+      dataConclusao: dataConclusaoISO,
+      id: this.taskId,
     };
 
     if (this.taskId) {
-      // Atualiza tarefa existente
       this.taskService.updateTask(this.taskId, task).subscribe(() => {
         alert('Tarefa atualizada com sucesso!');
         this.router.navigate(['/tasks']);
       });
     } else {
-      // Cria nova tarefa
       this.taskService.createTask(task).subscribe(() => {
         alert('Tarefa criada com sucesso!');
         this.router.navigate(['/tasks']);

@@ -37,11 +37,18 @@ export class TaskListComponent implements OnInit {
     }
   }
 
-  markAsCompleted(task: Task) {
-    const updatedTask = { ...task, completado: true };
+  toggleComplete(task: Task) {
+    const updatedTask = { ...task, completado: !task.completado };
+
     this.taskService.updateTask(task.id!, updatedTask).subscribe(() => {
-      task.completado = true;
-      alert('Tarefa marcada como concluída!');
+      task.completado = updatedTask.completado;
+      alert(
+        `Tarefa ${
+          updatedTask.completado
+            ? 'marcada como concluída'
+            : 'marcada como pendente'
+        }!`
+      );
     });
   }
 }
