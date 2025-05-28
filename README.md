@@ -1,27 +1,66 @@
-# TaskManager
+# Gerenciador de Tarefas - Frontend
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.2.19.
+Este é o frontend de um sistema de gerenciamento de tarefas desenvolvido em **Angular 18**, que permite criar, listar, editar e excluir tarefas, além de marcar como concluídas.
 
-## Development server
+## 🚀 Funcionalidades
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+- ✅ Listagem de tarefas
+- ➕ Criação de novas tarefas
+- ✏️ Edição de tarefas existentes
+- 🗑️ Exclusão de tarefas
+- ✔️ Marcar tarefas como concluídas
+- 🔗 Integração com uma API REST (backend em Node.js)
 
-## Code scaffolding
+---
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## 🛠️ Tecnologias utilizadas
 
-## Build
+- [Angular 18](https://angular.io/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [RxJS](https://rxjs.dev/)
+- [Angular Router](https://angular.io/guide/router)
+- [Angular Forms (Reactive Forms)](https://angular.io/guide/reactive-forms)
+- [SCSS](https://sass-lang.com/)
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+---
 
-## Running unit tests
+## 🔧 Pré-requisitos
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+- [Node.js](https://nodejs.org/) (versão recomendada: 18+)
+- [Angular CLI](https://angular.io/cli) instalado globalmente:
 
-## Running end-to-end tests
+```bash
+npm install -g @angular/cli
+```
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+## Instalação e execução
 
-## Further help
+1. Clone o repositório
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+```bash
+git clone https://github.com/seu-usuario/seu-repo-frontend.git
+```
+
+2. Acesse o diretório do projeto
+
+```sh
+cd seu-repo-frontend
+```
+
+3. Instale as dependências
+
+```sh
+npm install
+```
+
+4. Inicie o servidor
+
+```sh
+ng serve
+```
+
+5. Acesse no navegador:
+
+```sh
+http://localhost:4200
+```
