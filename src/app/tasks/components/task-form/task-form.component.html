@@ -6,21 +6,21 @@
       Título:
       <input formControlName="titulo" />
     </label>
-    <br />
+
     <label>
       Descrição:
       <textarea formControlName="descricao"></textarea>
     </label>
-    <br />
-    <label>
+
+    <label class="checkbox-label">
       <input type="checkbox" formControlName="completado" />
       Concluído
     </label>
-    <br />
-    <button type="submit" [disabled]="form.invalid">
+
+    <button class="btn" type="submit" [disabled]="form.invalid">
       {{ taskId ? "Atualizar" : "Criar" }}
     </button>
   </form>
 
-  <a routerLink="/tasks">Voltar</a>
+  <a routerLink="/tasks" class="btn-link">Voltar</a>
 </div>

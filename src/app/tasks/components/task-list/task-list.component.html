@@ -1,7 +1,7 @@
-<div class="task-form">
+<div class="task-list">
   <h2>Lista de Tarefas</h2>
 
-  <a routerLink="/tasks/new">Nova Tarefa</a>
+  <a routerLink="/tasks/new" class="btn">Nova Tarefa</a>
 
   <ul *ngIf="tasks.length > 0; else empty">
     <li *ngFor="let task of tasks">
