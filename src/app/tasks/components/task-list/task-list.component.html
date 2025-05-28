@@ -3,12 +3,31 @@
 
   <a routerLink="/tasks/new" class="btn">Nova Tarefa</a>
 
-  <ul *ngIf="tasks.length > 0; else empty">
-    <li *ngFor="let task of tasks">
+  <div class="filters">
+    <label>
+      Filtro:
+      <select [(ngModel)]="filterStatus">
+        <option value="all">Todas</option>
+        <option value="completed">Concluídas</option>
+        <option value="pending">Pendentes</option>
+      </select>
+    </label>
+
+    <label>
+      Ordenar por:
+      <select [(ngModel)]="sortBy">
+        <option value="createdAt">Data de Criação</option>
+        <option value="completedAt">Data de Conclusão</option>
+      </select>
+    </label>
+  </div>
+
+  <ul *ngIf="filteredTasks.length > 0; else empty">
+    <li *ngFor="let task of filteredTasks">
       <app-task-item
         [task]="task"
         (deleteTask)="deleteTask(task.id!)"
-        (completeTask)="toggleComplete(task)"
+        (completeTask)="markAsCompleted(task)"
       >
       </app-task-item>
     </li>

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 
 import { Task } from '../../models/task.model';
 import { TaskService } from '../../services/task.service';
@@ -9,12 +10,17 @@ import { TaskItemComponent } from '../task-item/task-item.component';
 @Component({
   selector: 'app-task-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, TaskItemComponent],
+  imports: [CommonModule, RouterModule, FormsModule, TaskItemComponent],
   templateUrl: './task-list.component.html',
   styleUrls: ['./task-list.component.scss'],
 })
 export class TaskListComponent implements OnInit {
-  tasks: Task[] = [];
+
+  tasks: Task[] = []; // Lista de tarefas carregadas da API
+
+  // Estado atual do filtro e ordenação
+  filterStatus: 'all' | 'completed' | 'pending' = 'all';
+  sortBy: 'createdAt' | 'completedAt' = 'createdAt';
 
   constructor(private taskService: TaskService) {}
 
@@ -22,12 +28,14 @@ export class TaskListComponent implements OnInit {
     this.loadTasks();
   }
 
+  // Carrega todas as tarefas da API
   loadTasks() {
     this.taskService.getAllTasks().subscribe((tasks) => {
       this.tasks = tasks;
     });
   }
 
+  // Exclui uma tarefa
   deleteTask(id: number) {
     if (confirm('Você tem certeza que deseja excluir essa tarefa?')) {
       this.taskService.deleteTask(id).subscribe(() => {
@@ -37,18 +45,41 @@ export class TaskListComponent implements OnInit {
     }
   }
 
-  toggleComplete(task: Task) {
-    const updatedTask = { ...task, completado: !task.completado };
-
+  // Marca uma tarefa como concluída
+  markAsCompleted(task: Task) {
+    const updatedTask = { ...task, completado: true };
     this.taskService.updateTask(task.id!, updatedTask).subscribe(() => {
-      task.completado = updatedTask.completado;
-      alert(
-        `Tarefa ${
-          updatedTask.completado
-            ? 'marcada como concluída'
-            : 'marcada como pendente'
-        }!`
-      );
+      task.completado = true;
+      alert('Tarefa marcada como concluída!');
     });
+  }
+
+  // Aplica filtro e ordenação nas tarefas
+  get filteredTasks(): Task[] {
+    let filtered = [...this.tasks];
+
+    // Filtro por status
+    if (this.filterStatus === 'completed') {
+      filtered = filtered.filter((task) => task.completado);
+    } else if (this.filterStatus === 'pending') {
+      filtered = filtered.filter((task) => !task.completado);
+    }
+
+    // Ordenação
+    if (this.sortBy === 'createdAt') {
+      filtered = filtered.sort((a, b) => {
+        const dateA = new Date(a.createdAt!).getTime();
+        const dateB = new Date(b.createdAt!).getTime();
+        return dateB - dateA; // Mais recentes primeiro
+      });
+    } else if (this.sortBy === 'completedAt') {
+      filtered = filtered.sort((a, b) => {
+        const dateA = a.dataConclusao ? new Date(a.dataConclusao).getTime() : 0;
+        const dateB = b.dataConclusao ? new Date(b.dataConclusao).getTime() : 0;
+        return dateB - dateA;
+      });
+    }
+
+    return filtered;
   }
 }
