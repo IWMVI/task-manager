@@ -1,1 +1,12 @@
-<p>task-item works!</p>
+<div [class.completed]="task.completado">
+  <h3>{{ task.titulo }}</h3>
+  <p>{{ task.descricao }}</p>
+
+  <button (click)="complete()" [disabled]="task.completado">
+    {{ task.completado ? 'Concluído' : 'Marcar como Concluído' }}
+  </button>
+
+  <button (click)="delete()">Excluir</button>
+
+  <a [routerLink]="['/tasks/edit', task.id]">Editar</a>
+</div>
