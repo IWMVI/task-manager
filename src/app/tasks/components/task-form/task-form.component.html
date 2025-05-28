@@ -1,1 +1,26 @@
-<p>task-form works!</p>
+<div class="task-form">
+  <h2>{{ taskId ? "Editar Tarefa" : "Nova Tarefa" }}</h2>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <label>
+      Título:
+      <input formControlName="titulo" />
+    </label>
+    <br />
+    <label>
+      Descrição:
+      <textarea formControlName="descricao"></textarea>
+    </label>
+    <br />
+    <label>
+      <input type="checkbox" formControlName="completado" />
+      Concluído
+    </label>
+    <br />
+    <button type="submit" [disabled]="form.invalid">
+      {{ taskId ? "Atualizar" : "Criar" }}
+    </button>
+  </form>
+
+  <a routerLink="/tasks">Voltar</a>
+</div>
