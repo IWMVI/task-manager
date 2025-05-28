@@ -1,5 +1,7 @@
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig } from '@angular/core';
 import { provideRouter } from '@angular/router';
+import { provideHttpClient } from '@angular/common/http';
+import { provideZoneChangeDetection } from '@angular/core';
 import { provideClientHydration } from '@angular/platform-browser';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
@@ -7,16 +9,10 @@ import { routes } from './app.routes';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    // Detecção de mudanças otimizada
     provideZoneChangeDetection({ eventCoalescing: true }),
-
-    // Roteamento principal da aplicação
     provideRouter(routes),
-
-    // Suporte a Server Side Rendering (SSR) com hidratação
+    provideHttpClient(),
     provideClientHydration(),
-
-    // Animações carregadas de forma assíncrona (melhora performance)
     provideAnimationsAsync(),
   ],
 };

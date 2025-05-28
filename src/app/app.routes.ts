@@ -1,13 +1,39 @@
 import { Routes } from '@angular/router';
-import { HomeComponent } from './home/home.component';
-import { TaskFormComponent } from './tasks/components/task-form/task-form.component';
-import { TaskListComponent } from './tasks/components/task-list/task-list.component';
 
 export const routes: Routes = [
-  { path: 'home', component: HomeComponent },
-  { path: 'tasks', component: TaskListComponent },
-  { path: 'tasks/new', component: TaskFormComponent },
-  { path: 'tasks/edit/:id', component: TaskFormComponent },
-  { path: '', redirectTo: 'home', pathMatch: 'full' },
-  { path: '**', redirectTo: 'home' },
+  {
+    path: 'home',
+    loadComponent: () =>
+      import('./home/home.component').then((m) => m.HomeComponent),
+  },
+  {
+    path: 'tasks',
+    loadComponent: () =>
+      import('./tasks/components/task-list/task-list.component').then(
+        (m) => m.TaskListComponent
+      ),
+  },
+  {
+    path: 'tasks/new',
+    loadComponent: () =>
+      import('./tasks/components/task-form/task-form.component').then(
+        (m) => m.TaskFormComponent
+      ),
+  },
+  {
+    path: 'tasks/edit/:id',
+    loadComponent: () =>
+      import('./tasks/components/task-form/task-form.component').then(
+        (m) => m.TaskFormComponent
+      ),
+  },
+  {
+    path: '',
+    redirectTo: 'home',
+    pathMatch: 'full',
+  },
+  {
+    path: '**',
+    redirectTo: 'home',
+  },
 ];
