@@ -1,0 +1,66 @@
+.home-container {
+  max-width: 600px;
+  margin: 3rem auto;
+  padding: 2rem;
+  background-color: #f5f7fa;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  font-family: 'Roboto', sans-serif;
+}
+
+.home-container h1 {
+  color: #2c3e50;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.home-container p {
+  color: #34495e;
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+}
+
+.home-container .nav-links {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+.home-container .nav-links .btn {
+  padding: 0.75rem 1.8rem;
+  background-color: #1976d2;
+  color: white;
+  font-weight: 600;
+  font-size: 1rem;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 2px 6px rgba(25, 118, 210, 0.4);
+}
+
+.home-container .nav-links .btn:hover {
+  background-color: #155fa0;
+  box-shadow: 0 4px 12px rgba(21, 95, 160, 0.6);
+}
+
+.home-container .nav-links .btn:active {
+  background-color: #104b73;
+}
+
+/* Responsivo */
+@media (max-width: 480px) {
+  .home-container {
+    margin: 2rem 1rem;
+    padding: 1.5rem;
+  }
+
+  .home-container .nav-links {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .home-container .nav-links .btn {
+    width: 100%;
+  }
+}
