@@ -38,13 +38,13 @@ npm install -g @angular/cli
 1. Clone o repositório
 
 ```bash
-git clone https://github.com/seu-usuario/seu-repo-frontend.git
+git clone https://github.com/IWMVI/task-manager.git
 ```
 
 2. Acesse o diretório do projeto
 
 ```sh
-cd seu-repo-frontend
+cd task-manager
 ```
 
 3. Instale as dependências
