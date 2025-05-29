@@ -24,6 +24,7 @@ export class TaskFormComponent implements OnInit {
 
   // ID da tarefa, usado na edição
   taskId?: number;
+  task: any;
 
   constructor(
     private fb: FormBuilder, // Para criar o formulário
@@ -68,11 +69,14 @@ export class TaskFormComponent implements OnInit {
       : null;
 
     const task: Task = {
-      titulo: this.form.value.titulo,
+      titulo: this.form.value.titulo!,
       descricao: this.form.value.descricao ?? '',
       completado: this.form.value.completado ?? false,
-      dataConclusao: dataConclusaoISO,
+      dataConclusao: this.form.value.completado
+        ? new Date().toISOString()
+        : null,
       id: this.taskId,
+      createdAt: this.task?.createdAt ?? new Date().toISOString(), // <-- aqui mantém ou cria
     };
 
     if (this.taskId) {
