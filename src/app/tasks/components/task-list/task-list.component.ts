@@ -15,7 +15,6 @@ import { TaskItemComponent } from '../task-item/task-item.component';
   styleUrls: ['./task-list.component.scss'],
 })
 export class TaskListComponent implements OnInit {
-
   tasks: Task[] = []; // Lista de tarefas carregadas da API
 
   // Estado atual do filtro e ordenação
@@ -47,11 +46,12 @@ export class TaskListComponent implements OnInit {
 
   // Marca uma tarefa como concluída
   markAsCompleted(task: Task) {
-    const updatedTask = { ...task, completado: true };
-    this.taskService.updateTask(task.id!, updatedTask).subscribe(() => {
-      task.completado = true;
-      alert('Tarefa marcada como concluída!');
-    });
+    const updatedTask: Task = {
+      ...task,
+      completado: true,
+      dataConclusao: new Date().toISOString(),
+      createdAt: task.createdAt, // <-- mantém a data original
+    };
   }
 
   // Aplica filtro e ordenação nas tarefas
@@ -66,19 +66,24 @@ export class TaskListComponent implements OnInit {
     }
 
     // Ordenação
-    if (this.sortBy === 'createdAt') {
-      filtered = filtered.sort((a, b) => {
-        const dateA = new Date(a.createdAt!).getTime();
-        const dateB = new Date(b.createdAt!).getTime();
-        return dateB - dateA; // Mais recentes primeiro
-      });
-    } else if (this.sortBy === 'completedAt') {
-      filtered = filtered.sort((a, b) => {
-        const dateA = a.dataConclusao ? new Date(a.dataConclusao).getTime() : 0;
-        const dateB = b.dataConclusao ? new Date(b.dataConclusao).getTime() : 0;
-        return dateB - dateA;
-      });
-    }
+    filtered = filtered.sort((a, b) => {
+      const dataConclusaoA = a.dataConclusao
+        ? new Date(a.dataConclusao).getTime()
+        : Infinity;
+      const dataConclusaoB = b.dataConclusao
+        ? new Date(b.dataConclusao).getTime()
+        : Infinity;
+
+      // Primeiro: ordenar pela data de conclusão mais próxima
+      if (dataConclusaoA !== dataConclusaoB) {
+        return dataConclusaoA - dataConclusaoB;
+      }
+
+      // Se empatou na data de conclusão, ordenar pela data de criação (mais antigos no topo)
+      const createdAtA = new Date(a.createdAt!).getTime();
+      const createdAtB = new Date(b.createdAt!).getTime();
+      return createdAtA - createdAtB;
+    });
 
     return filtered;
   }
