@@ -1,8 +1,7 @@
-import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { DatePipe } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 import { Task } from '../../models/task.model';
 import { TaskService } from '../../services/task.service';
@@ -17,13 +16,7 @@ import { TaskItemComponent } from '../task-item/task-item.component';
 @Component({
   selector: 'app-task-list',
   standalone: true,
-  imports: [
-    CommonModule,
-    RouterModule,
-    FormsModule,
-    TaskItemComponent,
-    DatePipe,
-  ],
+  imports: [CommonModule, RouterModule, FormsModule, TaskItemComponent],
   templateUrl: './task-list.component.html',
   styleUrls: ['./task-list.component.scss'],
 })
@@ -55,7 +48,7 @@ export class TaskListComponent implements OnInit {
    * Cria uma instância de TaskListComponent.
    * @param {TaskService} taskService - O serviço responsável por interagir com a API de tarefas.
    */
-  constructor(private taskService: TaskService) {}
+  constructor(private readonly taskService: TaskService) {}
 
   /**
    * Hook do ciclo de vida ngOnInit.
@@ -135,7 +128,7 @@ export class TaskListComponent implements OnInit {
    */
   markAsCompleted(task: Task): void {
     const updatedTask = { ...task, completado: true };
-    this.taskService.updateTask(task.id!, updatedTask).subscribe(() => {
+    this.taskService.updateTask(task.id, updatedTask).subscribe(() => {
       task.completado = true; // Atualiza o estado localmente sem recarregar todas as tarefas
       alert('Tarefa marcada como concluída!');
     });
