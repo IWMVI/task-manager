@@ -3,7 +3,7 @@ export interface Task {
   titulo: string;
   descricao: string;
   completado: boolean;
-  dataConclusao?: string | null;
+  dataConclusao: string;
   createdAt?: string;
   updatedAt?: string;
 }
