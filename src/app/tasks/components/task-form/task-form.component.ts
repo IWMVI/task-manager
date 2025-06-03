@@ -26,10 +26,10 @@ export class TaskFormComponent implements OnInit {
   taskId?: number;
 
   constructor(
-    private fb: FormBuilder, // Para criar o formulário
-    private taskService: TaskService, // Serviço de tarefas (API)
-    private router: Router, // Para navegação
-    private route: ActivatedRoute // Para pegar parâmetros da rota
+    private readonly fb: FormBuilder, // Para criar o formulário
+    private readonly taskService: TaskService, // Serviço de tarefas (API)
+    private readonly router: Router, // Para navegação
+    private readonly route: ActivatedRoute // Para pegar parâmetros da rota
   ) {}
 
   ngOnInit(): void {
