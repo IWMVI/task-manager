@@ -68,11 +68,11 @@ export class TaskFormComponent implements OnInit {
       : null;
 
     const task: Task = {
+      id: this.taskId!,
       titulo: this.form.value.titulo,
       descricao: this.form.value.descricao ?? '',
       completado: this.form.value.completado ?? false,
       dataConclusao: dataConclusaoISO,
-      id: this.taskId,
     };
 
     if (this.taskId) {
