@@ -16,8 +16,10 @@
     <label>
       Ordenar por:
       <select [(ngModel)]="sortBy">
-        <option value="createdAt">Data de Criação</option>
-        <option value="completedAt">Data de Conclusão</option>
+        <option value="newestCreated">Mais recentes primeiro</option>
+        <option value="oldestCreated">Mais antigos primeiro</option>
+        <option value="closestCompletion">Conclusão mais próxima</option>
+        <option value="furthestCompletion">Conclusão mais distante</option>
       </select>
     </label>
   </div>

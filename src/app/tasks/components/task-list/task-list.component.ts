@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { DatePipe } from '@angular/common';
 
 import { Task } from '../../models/task.model';
 import { TaskService } from '../../services/task.service';
@@ -16,7 +17,13 @@ import { TaskItemComponent } from '../task-item/task-item.component';
 @Component({
   selector: 'app-task-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule, TaskItemComponent],
+  imports: [
+    CommonModule,
+    RouterModule,
+    FormsModule,
+    TaskItemComponent,
+    DatePipe,
+  ],
   templateUrl: './task-list.component.html',
   styleUrls: ['./task-list.component.scss'],
 })
@@ -34,10 +41,15 @@ export class TaskListComponent implements OnInit {
   filterStatus: 'all' | 'completed' | 'pending' = 'all';
 
   /**
-   * O critério de ordenação para as tarefas. Pode ser 'createdAt' (data de criação) ou 'completedAt' (data de conclusão).
-   * @type {'createdAt' | 'completedAt'}
+   * O critério de ordenação para as tarefas. As opções incluem:
+   * - 'oldestCreated': Tarefas mais antigas primeiro (pela data de criação).
+   * - 'newestCreated': Tarefas mais recentes primeiro (pela data de criação).
+   * - 'closesDue': Tarefas com data de conclusão mais próxima primeiro.
+   * - 'farthestDue': Tarefas com data de conclusão mais distante primeiro.
+   * @type {'oldestCreated' | 'newestCreated' | 'closesDue' | 'farthestDue'}
    */
-  sortBy: 'createdAt' | 'completedAt' = 'createdAt';
+  sortBy: 'oldestCreated' | 'newestCreated' | 'closesDue' | 'farthestDue' =
+    'newestCreated';
 
   /**
    * Cria uma instância de TaskListComponent.
@@ -55,11 +67,47 @@ export class TaskListComponent implements OnInit {
   }
 
   /**
+   * Converte uma string de data do formato `DD/MM/YYYY` para um objeto `Date`.
+   * Retorna `null` se a data for inválida ou não fornecida.
+   * @param {string | null | undefined} dateString - A string de data no formato `DD/MM/YYYY`.
+   * @returns {Date | null} O objeto Date correspondente ou `null`.
+   */
+  private parseDateString(dateString: string | null | undefined): Date | null {
+    if (!dateString) {
+      return null;
+    }
+    // Supondo que a dataConclusao pode vir como "DD/MM/YYYY" ou "YYYY-MM-DD"
+    // Se for "DD/MM/YYYY", converte para "YYYY-MM-DD" para parser consistente
+    const parts = dateString.split('/');
+    if (parts.length === 3) {
+      // É provável que seja DD/MM/YYYY
+      const day = parseInt(parts[0], 10);
+      const month = parseInt(parts[1], 10) - 1; // Mês é 0-indexed
+      const year = parseInt(parts[2], 10);
+      const date = new Date(year, month, day);
+      // Verifica se a data é válida
+      if (isNaN(date.getTime())) {
+        return null;
+      }
+      return date;
+    }
+
+    // Tenta parsear como ISO 8601 ou outro formato reconhecido nativamente
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) {
+      return null;
+    }
+    return date;
+  }
+
+  /**
    * Carrega todas as tarefas do serviço `TaskService` e as atribui à propriedade `tasks`.
    * @returns {void}
    */
   loadTasks(): void {
     this.taskService.getAllTasks().subscribe((tasks) => {
+      // Opcional: pré-processar as datas aqui se você quiser que elas sempre sejam Date objects
+      // mas o getter filteredTasks já faz o parse para a ordenação.
       this.tasks = tasks;
     });
   }
@@ -109,24 +157,67 @@ export class TaskListComponent implements OnInit {
     }
 
     // Aplica a ordenação
-    if (this.sortBy === 'createdAt') {
-      filtered = filtered.sort((a, b) => {
-        const dateA = new Date(a.createdAt!).getTime();
-        const dateB = new Date(b.createdAt!).getTime();
-        return dateB - dateA; // Ordena da mais recente para a mais antiga
-      });
-    } else if (this.sortBy === 'completedAt') {
-      filtered = filtered.sort((a, b) => {
-        // Se a data de conclusão for nula, assume um valor alto para que tarefas não concluídas
-        // sejam exibidas por último quando ordenadas por data de conclusão.
-        const dateA = a.dataConclusao
-          ? new Date(a.dataConclusao).getTime()
-          : Number.MAX_SAFE_INTEGER;
-        const dateB = b.dataConclusao
-          ? new Date(b.dataConclusao).getTime()
-          : Number.MAX_SAFE_INTEGER;
-        return dateA - dateB; // Ordena da mais próxima data de conclusão para a mais distante
-      });
+    switch (this.sortBy) {
+      case 'oldestCreated':
+        filtered = filtered.sort((a, b) => {
+          const dateA = new Date(a.createdAt!).getTime();
+          const dateB = new Date(b.createdAt!).getTime();
+          return dateA - dateB; // Mais antigos primeiro (ordem crescente)
+        });
+        break;
+      case 'newestCreated':
+        filtered = filtered.sort((a, b) => {
+          const dateA = new Date(a.createdAt!).getTime();
+          const dateB = new Date(b.createdAt!).getTime();
+          return dateB - dateA; // Mais recentes primeiro (ordem decrescente)
+        });
+        break;
+      case 'closesDue':
+        filtered = filtered.sort((a, b) => {
+          // Usa a nova função parseDateString para garantir que a data seja interpretada corretamente
+          const dateATime = this.parseDateString(a.dataConclusao)?.getTime();
+          const dateBTime = this.parseDateString(b.dataConclusao)?.getTime();
+
+          // Trata datas nulas ou inválidas, colocando-as no final da lista
+          const finalDateA =
+            dateATime && !isNaN(dateATime)
+              ? dateATime
+              : Number.MAX_SAFE_INTEGER;
+          const finalDateB =
+            dateBTime && !isNaN(dateBTime)
+              ? dateBTime
+              : Number.MAX_SAFE_INTEGER;
+
+          console.log(
+            `[closesDue] Comparing "${a.titulo}" (${a.dataConclusao} -> ${finalDateA}) with "${b.titulo}" (${b.dataConclusao} -> ${finalDateB})`
+          );
+
+          return finalDateA - finalDateB; // Conclusão mais próxima primeiro (ordem crescente)
+        });
+        break;
+      case 'farthestDue':
+        filtered = filtered.sort((a, b) => {
+          // Usa a nova função parseDateString para garantir que a data seja interpretada corretamente
+          const dateATime = this.parseDateString(a.dataConclusao)?.getTime();
+          const dateBTime = this.parseDateString(b.dataConclusao)?.getTime();
+
+          // Trata datas nulas ou inválidas, colocando-as no final da lista
+          const finalDateA =
+            dateATime && !isNaN(dateATime)
+              ? dateATime
+              : Number.MAX_SAFE_INTEGER;
+          const finalDateB =
+            dateBTime && !isNaN(dateBTime)
+              ? dateBTime
+              : Number.MAX_SAFE_INTEGER;
+
+          console.log(
+            `[farthestDue] Comparing "${a.titulo}" (${a.dataConclusao} -> ${finalDateA}) with "${b.titulo}" (${b.dataConclusao} -> ${finalDateB})`
+          );
+
+          return finalDateB - finalDateA; // Conclusão mais distante primeiro (ordem decrescente)
+        });
+        break;
     }
 
     return filtered;
