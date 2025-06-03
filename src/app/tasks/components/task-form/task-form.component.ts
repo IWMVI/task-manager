@@ -101,10 +101,11 @@ export class TaskFormComponent implements OnInit {
 
     // Obtém o valor bruto da data de conclusão do formulário.
     const dataConclusaoRaw = this.form.value.dataConclusao;
+
     // Converte a data para o formato ISO 8601 ou define como null se não houver data.
     const dataConclusaoISO = dataConclusaoRaw
       ? new Date(dataConclusaoRaw).toISOString()
-      : null;
+      : '';
 
     // Cria um objeto Task com os valores do formulário.
     const task: Task = {
