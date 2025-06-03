@@ -1,3 +1,4 @@
+import { HomeComponent } from './components/home/home.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -12,11 +13,13 @@ import { TaskItemComponent } from './components/task-item/task-item.component';
     CommonModule,
     ReactiveFormsModule,
     RouterModule,
+    HomeComponent,
     TaskFormComponent,
     TaskListComponent,
     TaskItemComponent,
   ],
   exports: [
+    HomeComponent,
     TaskFormComponent,
     TaskListComponent,
     TaskItemComponent,
