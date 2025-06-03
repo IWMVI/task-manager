@@ -4,14 +4,13 @@ import { Task } from '../models/task.model';
 import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root' // Torna este serviço disponível em toda a aplicação
+  providedIn: 'root', // Torna este serviço disponível em toda a aplicação
 })
 export class TaskService {
-
-  private apiUrl = 'http://localhost:3000/api/tasks';
+  private readonly apiUrl = 'http://localhost:3000/api/tasks';
 
   // Injeta o serviço HttpClient, que permite fazer chamadas HTTP
-  constructor(private http: HttpClient) {}
+  constructor(private readonly http: HttpClient) {}
 
   /**
    * Retorna todas as tarefas do backend
