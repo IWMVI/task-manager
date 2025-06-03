@@ -3,12 +3,16 @@
   <p>{{ task.descricao }}</p>
   <p>
     Data de conclusão:
-    {{ task.dataConclusao ? (task.dataConclusao | date: 'shortDate') : 'Sem data' }}
+    {{
+      task.dataConclusao
+        ? (task.dataConclusao | date : "dd/MM/yyyy")
+        : "Sem data"
+    }}
   </p>
-  <p>Status: {{ task.completado ? 'Concluído' : 'Pendente' }}</p>
+  <p>Status: {{ task.completado ? "Concluído" : "Pendente" }}</p>
 
   <button (click)="complete()">
-    {{ task.completado ? 'Desmarcar' : 'Concluir' }}
+    {{ task.completado ? "Desmarcar" : "Concluir" }}
   </button>
   <button (click)="edit()">Editar</button>
   <button (click)="delete()">Excluir</button>

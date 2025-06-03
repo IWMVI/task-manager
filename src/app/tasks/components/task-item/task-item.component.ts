@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { Task } from '../../models/task.model';
 import { Router, RouterModule } from '@angular/router';
 
@@ -12,7 +12,7 @@ import { Router, RouterModule } from '@angular/router';
 @Component({
   selector: 'app-task-item',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, DatePipe],
   templateUrl: './task-item.component.html',
   styleUrls: ['./task-item.component.scss'],
 })
@@ -44,7 +44,7 @@ export class TaskItemComponent {
    * Cria uma instância de TaskItemComponent.
    * @param {Router} router - Serviço para navegação entre rotas.
    */
-  constructor(private router: Router) {}
+  constructor(private readonly router: Router) {}
 
   /**
    * Emite o evento `completeTask`, indicando que a tarefa deve ser completada ou incompletada.
@@ -59,7 +59,7 @@ export class TaskItemComponent {
    * @returns {void}
    */
   delete(): void {
-    this.deleteTask.emit(this.task.id!);
+    this.deleteTask.emit(this.task.id);
   }
 
   /**
